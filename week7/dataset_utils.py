@@ -21,9 +21,13 @@ class DataLoader:
             shuffle=phase == 'train',
             num_workers=3,
             collate_fn=self.collate_fn)
-
+    
     def __len__(self):
-        return min(len(self.dataset), self.max_dataset_size)
+        len_ = min(len(self.dataset), self.max_dataset_size)
+        if len_ % self.batch_size != 0:
+            return len_ // self.batch_size + 1
+        return len_ // self.batch_size
+
 
     def __iter__(self):
         for i, data in enumerate(self.dataloader):
